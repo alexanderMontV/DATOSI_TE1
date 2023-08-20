@@ -31,6 +31,6 @@ public class JFrame_Principal extends JFrame{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
-        frame.setSize(800,400);
+        frame.setSize(700,400);
     }
 }
