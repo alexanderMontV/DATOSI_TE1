@@ -1,16 +1,16 @@
 package com.ejemploVisual;
 
+import java.awt.*;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class JFrame_Principal extends JFrame{
-    private JPanel Jpanel_Main;
-    private JLabel labelTxy;
     private JTextField textField1;
     private JButton button1;
 
     public JFrame_Principal() {
+        initComponents();
         button1.addActionListener(new ActionListener() {
             /**
              * Invoked when an action occurs.
@@ -33,4 +33,17 @@ public class JFrame_Principal extends JFrame{
         frame.setVisible(true);
         frame.setSize(700,400);
     }
+
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
+    }
+
+    private void initComponents() {
+
+    }
+
+    // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
+    // Generated using JFormDesigner Evaluation license - unknown
+    private JPanel Jpanel_Main;
+    // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
