@@ -108,7 +108,7 @@ class Chat extends JPanel implements Runnable {
 			chat.append("\n" + chatApp.getText());
 			try {
 
-				Socket mysocket = new Socket("172.18.220.6",9999); //Abre el socket
+				Socket mysocket = new Socket("192.168.18.130",9999); //Abre el socket
 
 				paqueteDato datos = new paqueteDato(); //Crear un paquete con la información que se va a enviar (Objeto)
 
