@@ -3,8 +3,9 @@ import java.io.*;
 import java.net.*;
 import java.awt.*;
 import java.net.ServerSocket;
+import java.util.ArrayList;
 
-public class Servidor  {
+public class 	Servidor  {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -44,10 +45,13 @@ class MarcoServidor extends JFrame implements Runnable {
 
 	@Override
 	public void run() {
-		try {
-			ServerSocket server = new ServerSocket(9999);
 
-			String ip, mensaje;
+		try {
+			ServerSocket server = new ServerSocket(9999); //Socket de entrada
+
+			String ip, mensaje, usuario;
+
+			ArrayList <String> listaIP = new ArrayList<String>();
 
 			paqueteDato paqueteR;
 
@@ -59,23 +63,47 @@ class MarcoServidor extends JFrame implements Runnable {
 
 				paqueteR = (paqueteDato) paqueteEntrada.readObject(); //Leer el flujo de datos como Object
 
-				ip = paqueteR.getIp(); //Obtiene la ip y el mensaje con métodos getter y setter
+				ip = paqueteR.getIp(); //Obtiene la ip, el mensaje y el usuario con métodos getter y setter
 
 				mensaje = paqueteR.getMensaje();
 
-				areaTexto.append("\n" + ip + "\n" + mensaje);
+				usuario = paqueteR.getUsuario();
 
-				Socket enviaDestinatario = new Socket(ip, 9090);
+				if (!mensaje.equals("ONLINE")) {
 
-				ObjectOutputStream paqueteE = new ObjectOutputStream(enviaDestinatario.getOutputStream());
+					areaTexto.append("\nIP: " + ip + "\nUsuario: " + usuario + "\nMensaje: " + mensaje);
 
-				paqueteE.writeObject(paqueteR);
+					System.out.println(ip);
 
-				paqueteE.close();
+					Socket socketDestino = new Socket(ip, 8080); //Socket salida
 
-				enviaDestinatario.close();
+					ObjectOutputStream paqueteE = new ObjectOutputStream(socketDestino.getOutputStream());
 
-				mysocket.close();
+					paqueteE.writeObject(paqueteR);
+
+					paqueteE.close();
+
+					socketDestino.close();
+
+					mysocket.close();
+
+				}else {
+
+					InetAddress IP = mysocket.getInetAddress(); //Obtiene ip de los clientes online
+
+					String ipCliente = IP.getHostAddress();
+
+					System.out.println("IP: " + ipCliente);
+
+					listaIP.add(ipCliente);
+
+					paqueteR.setIPs(listaIP);
+
+					for (String element:listaIP){
+						System.out.println(element);
+					}
+
+				}
 
 			}
 

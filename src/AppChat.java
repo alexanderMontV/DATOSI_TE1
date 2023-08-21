@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
+import java.util.Objects;
 
 public class AppChat {
 
@@ -20,26 +22,65 @@ class MarcoApp extends JFrame{
 	
 	public MarcoApp() {
 
-		setBounds(600, 300,280,350);
+		setBounds(600, 300, 280, 350);
 
 		Chat ChatApp = new Chat();
 		
 		add(ChatApp);
 		
 		setVisible(true);
+
+		addWindowListener(new online());
 		}	
 	
 }
 
+//Clase para enviar la ip del usuario online
+class online extends WindowAdapter {  //Clase adaptadora para implementar todos los metodos de WindowsListener
+			public void windowOpened(WindowEvent evento){
+				try{
+					Socket mysocket = new Socket("172.18.226.124",9999);
+
+					paqueteDato datos = new paqueteDato();
+
+					datos.setMensaje("ONLINE");
+
+					ObjectOutputStream flujo = new ObjectOutputStream(mysocket.getOutputStream());
+
+					flujo.writeObject(datos);
+
+					mysocket.close();
+
+				}catch (Exception e){}
+			}
+
+		}
+
 class Chat extends JPanel implements Runnable {
-	
+
+	String nombreUsuario = new String();
+
 	public Chat(){
 
-		JLabel texto=new JLabel("IP");
+		nombreUsuario = JOptionPane.showInputDialog("Nombre de usuario: ");
+
+		JLabel usuario = new JLabel("Usuario: ");
+
+		add(usuario);
+
+		JLabel nombre = new JLabel();
+
+		nombre.setText(nombreUsuario);
+
+		add(nombre);
+
+		JLabel texto=new JLabel("Online: ");
 
 		add(texto);
 
-		ip = new JTextField(8);
+		ip = new JComboBox();
+
+		ip.addItem("172.18.226.124");
 
 		add(ip);
 
@@ -68,7 +109,9 @@ class Chat extends JPanel implements Runnable {
 	}
 
 
-	private JTextField chatApp, ip;
+	private JTextField chatApp;
+
+	private JComboBox ip;
 
 	private JTextArea chat;
 
@@ -93,7 +136,7 @@ class Chat extends JPanel implements Runnable {
 
 				paqueteR = (paqueteDato) flujoEntrada.readObject();
 
-				chat.append("\n" + paqueteR.getMensaje() + ":" + paqueteR.getIp());
+				chat.append("\n" + paqueteR.getUsuario() + ": " + paqueteR.getMensaje());
 
 			}
 
@@ -108,11 +151,13 @@ class Chat extends JPanel implements Runnable {
 			chat.append("\n" + chatApp.getText());
 			try {
 
-				Socket mysocket = new Socket("192.168.18.130",9999); //Abre el socket
+				Socket mysocket = new Socket("172.18.226.124",9999); //Abre el socket
 
 				paqueteDato datos = new paqueteDato(); //Crear un paquete con la información que se va a enviar (Objeto)
 
-				datos.setIp(ip.getText());
+				datos.setUsuario(nombreUsuario);
+
+				datos.setIp(Objects.requireNonNull(ip.getSelectedItem()).toString());
 
 				datos.setMensaje(chatApp.getText());
 
