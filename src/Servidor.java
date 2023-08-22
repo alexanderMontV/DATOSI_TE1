@@ -69,9 +69,14 @@ class MarcoServidor extends JFrame implements Runnable {
 
 				usuario = paqueteR.getUsuario();
 
-				areaTexto.append("\nIP: " + ip + "\nUsuario: " + usuario + "\nMensaje: " + mensaje);
+				if (mensaje.equals("ONLINE")){
 
-				if (!mensaje.equals("ONLINE")) {
+					InetAddress IP = mysocket.getInetAddress(); //Obtiene ip de los clientes online
+
+					String ipCliente = IP.getHostAddress();
+
+					System.out.println("IP: " + ipCliente);
+				}else{
 
 					areaTexto.append("\nIP: " + ip + "\nUsuario: " + usuario + "\nMensaje: " + mensaje);
 
@@ -88,25 +93,7 @@ class MarcoServidor extends JFrame implements Runnable {
 					socketDestino.close();
 
 					mysocket.close();
-
-				}else {
-
-					InetAddress IP = mysocket.getInetAddress(); //Obtiene ip de los clientes online
-
-					String ipCliente = IP.getHostAddress();
-
-					System.out.println("IP: " + ipCliente);
-
-					//listaIP.add(ipCliente);
-
-					//paqueteR.setIp2(listaIP);
-
-					/*for (String element:listaIP){
-						System.out.println(element);
-					}*/
-
 				}
-
 			}
 
 		} catch (IOException e) {

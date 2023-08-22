@@ -8,9 +8,9 @@ import java.util.Objects;
 public class AppChat {
 
 	public static void main(String[] args) {
-		
+
 		MarcoApp marco=new MarcoApp();
-		
+
 		marco.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 	}
@@ -19,7 +19,7 @@ public class AppChat {
 
 
 class MarcoApp extends JFrame{
-	
+
 	public MarcoApp() {
 
 		setBounds(600, 300, 280, 350);
@@ -30,37 +30,40 @@ class MarcoApp extends JFrame{
 		
 		setVisible(true);
 
-		//addWindowListener(new online());
+		addWindowListener(new online());
 		}	
 	
 }
 
 //Clase para enviar la ip del usuario online
-class online extends WindowAdapter {  //Clase adaptadora para implementar todos los metodos de WindowsListener
-			public void windowOpened(WindowEvent evento){
-				try{
-					Socket mysocket = new Socket("172.18.226.124",9999);
+class online extends WindowAdapter {
+	@Override
+	public void windowOpened(WindowEvent e) {
+		try {
+			Socket mysocket = new Socket("172.18.242.61", 9999);
 
-					paqueteDato datos = new paqueteDato();
+			paqueteDato online = new paqueteDato();
 
-					datos.setMensaje("ONLINE");
+			online.setMensaje("ONLINE");
 
-					ObjectOutputStream flujo = new ObjectOutputStream(mysocket.getOutputStream());
+			ObjectOutputStream flujo = new ObjectOutputStream(mysocket.getOutputStream());
 
-					flujo.writeObject(datos);
+			flujo.writeObject(online);
 
-					mysocket.close();
+			mysocket.close();
 
-				}catch (Exception e){}
-			}
-
-		}
-
+		} catch (UnknownHostException ex) {
+            throw new RuntimeException(ex);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }catch (Exception e2) {}
+    }
+}
 class Chat extends JPanel implements Runnable {
 
 	String nombreUsuario = new String();
 
-	public Chat(){
+	public Chat() {
 
 		nombreUsuario = JOptionPane.showInputDialog("Nombre de usuario: ");
 
@@ -74,7 +77,7 @@ class Chat extends JPanel implements Runnable {
 
 		add(nombre);
 
-		JLabel texto=new JLabel("Online: ");
+		JLabel texto = new JLabel("Online: ");
 
 		add(texto);
 
@@ -87,9 +90,9 @@ class Chat extends JPanel implements Runnable {
 		chat = new JTextArea(12, 20);
 
 		add(chat);
-	
+
 		chatApp = new JTextField(20);
-	
+
 		add(chatApp);
 
 		System.out.println(chatApp.getText());
@@ -99,7 +102,7 @@ class Chat extends JPanel implements Runnable {
 		enviarTexto event = new enviarTexto();
 
 		boton.addActionListener(event);
-		
+
 		add(boton);
 
 		Thread hilo = new Thread(this);
@@ -107,7 +110,6 @@ class Chat extends JPanel implements Runnable {
 		hilo.start();
 
 	}
-
 
 	private JTextField chatApp;
 
@@ -119,8 +121,7 @@ class Chat extends JPanel implements Runnable {
 
 	@Override
 	public void run() {
-
-		try{
+		try {
 
 			ServerSocket server = new ServerSocket(8080);
 
@@ -128,7 +129,7 @@ class Chat extends JPanel implements Runnable {
 
 			paqueteDato paqueteR;
 
-			while (true){
+			while (true) {
 
 				cliente = server.accept();
 
@@ -140,18 +141,17 @@ class Chat extends JPanel implements Runnable {
 
 			}
 
-		}catch (Exception e){
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 	}
 
-	private class enviarTexto implements ActionListener{ //ActionListener se usa para detectar y manejar eventos de acción
+	private class enviarTexto implements ActionListener { //ActionListener se usa para detectar y manejar eventos de acción
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			chat.append("\n" + chatApp.getText());
 			try {
-
-				Socket mysocket = new Socket("172.18.241.140",9999); //Abre el socket
+				Socket mysocket = new Socket("172.18.242.61", 9999); //Abre el socket
 
 				paqueteDato datos = new paqueteDato(); //Crear un paquete con la información que se va a enviar (Objeto)
 
@@ -167,18 +167,14 @@ class Chat extends JPanel implements Runnable {
 
 				mysocket.close();
 
-			}
-			catch (IOException ex) {
+			} catch (IOException ex) {
 				System.out.println(ex.getMessage());
 			}
 		}
-
 	}
-
-
 }
 
-class paqueteDato implements Serializable{  //"implements Serializable" es para que todos los obj sea puedan hacer en bit
+class paqueteDato implements Serializable {  //"implements Serializable" es para que todos los obj sea puedan hacer en bit
 
 	private String ip, mensaje, usuario;
 
@@ -198,7 +194,7 @@ class paqueteDato implements Serializable{  //"implements Serializable" es para 
 		this.ip = ip;
 	}
 
-	public  void  setIp2(ArrayList ip){
+	public void setIp2(ArrayList ip) {
 		this.ip = String.valueOf(ip);
 	}
 
