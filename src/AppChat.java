@@ -145,6 +145,8 @@ class Chat extends JPanel implements Runnable {
 
 					ipDesplegable = paqueteR.getIPs();
 
+					ip.removeAllItems();
+
 					for (String z:ipDesplegable){
 
 						ip.addItem(z);
