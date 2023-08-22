@@ -83,8 +83,6 @@ class Chat extends JPanel implements Runnable {
 
 		ip = new JComboBox();
 
-		ip.addItem("172.18.145.119");
-
 		add(ip);
 
 		chat = new JTextArea(12, 20);
@@ -137,7 +135,21 @@ class Chat extends JPanel implements Runnable {
 
 				paqueteR = (paqueteDato) flujoEntrada.readObject();
 
-				chat.append("\n" + paqueteR.getUsuario() + ": " + paqueteR.getMensaje());
+				if (!paqueteR.getMensaje().equals("ONLINE")){
+
+					chat.append("\n" + paqueteR.getUsuario() + ": " + paqueteR.getMensaje());
+
+				}else {
+
+					ArrayList <String> ipDesplegable = new ArrayList<String>();
+
+					ipDesplegable = paqueteR.getIPs();
+
+					for (String z:ipDesplegable){
+
+						ip.addItem(z);
+					}
+				}
 
 			}
 
@@ -177,6 +189,16 @@ class Chat extends JPanel implements Runnable {
 class paqueteDato implements Serializable {  //"implements Serializable" es para que todos los obj sea puedan hacer en bit
 
 	private String ip, mensaje, usuario;
+
+	private ArrayList<String> IPs;
+
+	public ArrayList<String> getIPs() {
+		return IPs;
+	}
+
+	public void setIPs(ArrayList<String> IPs) {
+		this.IPs = IPs;
+	}
 
 	public String getUsuario() {
 		return usuario;

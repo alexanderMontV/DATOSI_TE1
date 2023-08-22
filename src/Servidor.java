@@ -51,7 +51,7 @@ class MarcoServidor extends JFrame implements Runnable {
 
 			String ip, mensaje, usuario;
 
-			//ArrayList <String> listaIP = new ArrayList<String>();
+			ArrayList <String> listaIp = new ArrayList<String>();
 
 			paqueteDato paqueteR;
 
@@ -75,7 +75,27 @@ class MarcoServidor extends JFrame implements Runnable {
 
 					String ipCliente = IP.getHostAddress();
 
-					System.out.println("IP: " + ipCliente);
+					listaIp.add(ipCliente);
+
+					paqueteR.setIPs(listaIp);
+
+					for (String z: listaIp){
+
+						System.out.println("Array: " + z);
+
+						Socket socketDestino = new Socket(z, 8080); //Socket salida
+
+						ObjectOutputStream paqueteE = new ObjectOutputStream(socketDestino.getOutputStream());
+
+						paqueteE.writeObject(paqueteR);
+
+						paqueteE.close();
+
+						socketDestino.close();
+
+						mysocket.close();
+					}
+
 				}else{
 
 					areaTexto.append("\nIP: " + ip + "\nUsuario: " + usuario + "\nMensaje: " + mensaje);
