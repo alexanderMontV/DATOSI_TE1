@@ -100,8 +100,6 @@ class MarcoServidor extends JFrame implements Runnable {
 
 					areaTexto.append("\nIP: " + ip + "\nUsuario: " + usuario + "\nMensaje: " + mensaje);
 
-					System.out.println(ip);
-
 					Socket socketDestino = new Socket(ip, 8080); //Socket salida
 
 					ObjectOutputStream paqueteE = new ObjectOutputStream(socketDestino.getOutputStream());
