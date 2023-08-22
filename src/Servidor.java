@@ -51,7 +51,7 @@ class MarcoServidor extends JFrame implements Runnable {
 
 			String ip, mensaje, usuario;
 
-			ArrayList <String> listaIP = new ArrayList<String>();
+			//ArrayList <String> listaIP = new ArrayList<String>();
 
 			paqueteDato paqueteR;
 
@@ -68,6 +68,8 @@ class MarcoServidor extends JFrame implements Runnable {
 				mensaje = paqueteR.getMensaje();
 
 				usuario = paqueteR.getUsuario();
+
+				areaTexto.append("\nIP: " + ip + "\nUsuario: " + usuario + "\nMensaje: " + mensaje);
 
 				if (!mensaje.equals("ONLINE")) {
 
@@ -95,13 +97,13 @@ class MarcoServidor extends JFrame implements Runnable {
 
 					System.out.println("IP: " + ipCliente);
 
-					listaIP.add(ipCliente);
+					//listaIP.add(ipCliente);
 
-					paqueteR.setIPs(listaIP);
+					//paqueteR.setIp2(listaIP);
 
-					for (String element:listaIP){
+					/*for (String element:listaIP){
 						System.out.println(element);
-					}
+					}*/
 
 				}
 

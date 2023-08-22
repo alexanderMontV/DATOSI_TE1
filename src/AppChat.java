@@ -30,7 +30,7 @@ class MarcoApp extends JFrame{
 		
 		setVisible(true);
 
-		addWindowListener(new online());
+		//addWindowListener(new online());
 		}	
 	
 }
@@ -80,7 +80,7 @@ class Chat extends JPanel implements Runnable {
 
 		ip = new JComboBox();
 
-		ip.addItem("172.18.226.124");
+		ip.addItem("172.18.145.119");
 
 		add(ip);
 
@@ -122,7 +122,7 @@ class Chat extends JPanel implements Runnable {
 
 		try{
 
-			ServerSocket server = new ServerSocket(9090);
+			ServerSocket server = new ServerSocket(8080);
 
 			Socket cliente;
 
@@ -151,7 +151,7 @@ class Chat extends JPanel implements Runnable {
 			chat.append("\n" + chatApp.getText());
 			try {
 
-				Socket mysocket = new Socket("172.18.226.124",9999); //Abre el socket
+				Socket mysocket = new Socket("172.18.241.140",9999); //Abre el socket
 
 				paqueteDato datos = new paqueteDato(); //Crear un paquete con la información que se va a enviar (Objeto)
 
@@ -180,7 +180,15 @@ class Chat extends JPanel implements Runnable {
 
 class paqueteDato implements Serializable{  //"implements Serializable" es para que todos los obj sea puedan hacer en bit
 
-	private String ip, mensaje;
+	private String ip, mensaje, usuario;
+
+	public String getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(String usuario) {
+		this.usuario = usuario;
+	}
 
 	public String getIp() {
 		return ip;
@@ -188,6 +196,10 @@ class paqueteDato implements Serializable{  //"implements Serializable" es para 
 
 	public void setIp(String ip) {
 		this.ip = ip;
+	}
+
+	public  void  setIp2(ArrayList ip){
+		this.ip = String.valueOf(ip);
 	}
 
 	public String getMensaje() {
