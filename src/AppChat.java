@@ -5,7 +5,14 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.Objects;
 
+/**
+ * @Autor
+ */
 public class AppChat {
+	/**
+	 * @see
+	 * @param args
+	 */
 
 	public static void main(String[] args) {
 
@@ -17,7 +24,9 @@ public class AppChat {
 
 }
 
-
+/*
+Esta clase genera el inicio de la aplicación, desde agragar el estado en linea hasa crear la interfaz visible
+ */
 class MarcoApp extends JFrame{
 
 	public MarcoApp() {
@@ -40,7 +49,7 @@ class online extends WindowAdapter {
 	@Override
 	public void windowOpened(WindowEvent e) {
 		try {
-			Socket mysocket = new Socket("172.18.242.61", 9999);
+			Socket mysocket = new Socket("172.18.72.227", 9999);
 
 			paqueteDato online = new paqueteDato();
 
@@ -92,8 +101,6 @@ class Chat extends JPanel implements Runnable {
 		chatApp = new JTextField(20);
 
 		add(chatApp);
-
-		System.out.println(chatApp.getText());
 
 		boton = new JButton("Enviar");
 
@@ -165,7 +172,7 @@ class Chat extends JPanel implements Runnable {
 		public void actionPerformed(ActionEvent e) {
 			chat.append("\n" + chatApp.getText());
 			try {
-				Socket mysocket = new Socket("172.18.242.61", 9999); //Abre el socket
+				Socket mysocket = new Socket("172.18.72.227", 9999); //Abre el socket
 
 				paqueteDato datos = new paqueteDato(); //Crear un paquete con la información que se va a enviar (Objeto)
 
@@ -174,6 +181,8 @@ class Chat extends JPanel implements Runnable {
 				datos.setIp(Objects.requireNonNull(ip.getSelectedItem()).toString());
 
 				datos.setMensaje(chatApp.getText());
+
+				chatApp.setText("");
 
 				ObjectOutputStream paqueteDatos = new ObjectOutputStream(mysocket.getOutputStream()); //Flujo de salidad para poder enviar el objeto por la red
 
