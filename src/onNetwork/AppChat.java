@@ -7,13 +7,19 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.Objects;
 
+/**Clase principal de AppChat */
 public class AppChat {
 
+	
+	/** 
+	 * metodo main del AppChar
+	 * @param args default
+	 */
 	public static void main(String[] args) {
 
-		MarcoApp marco=new MarcoApp();
+		MarcoApp marco=new MarcoApp(); //nuevo objeto de tipo MarcoApp
 
-		marco.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		marco.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //operacion por defecto al cerrar la ventana
 
 	}
 
@@ -37,7 +43,7 @@ class MarcoApp extends JFrame{
 	
 }
 
-//Clase para enviar la ip del usuario online
+//Clase para enviar un msg con el estado de Online
 class online extends WindowAdapter {
 	@Override
 	public void windowOpened(WindowEvent e) {

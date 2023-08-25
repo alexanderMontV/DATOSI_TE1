@@ -25,6 +25,10 @@ public class JFrame_Principal extends JFrame{
         });
     }
 
+    
+    /** 
+     * @param args
+     */
     public static void main(String[] args) {
         JFrame frame = new JFrame("JFrame_Principal");
         frame.setContentPane(new JFrame_Principal().Jpanel_Main);
