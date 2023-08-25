@@ -1,3 +1,5 @@
+package onNetwork;
+
 import javax.swing.*;
 import java.awt.event.*;
 import java.io.*;
@@ -40,7 +42,7 @@ class online extends WindowAdapter {
 	@Override
 	public void windowOpened(WindowEvent e) {
 		try {
-			Socket mysocket = new Socket("172.18.242.61", 9999);
+			Socket mysocket = new Socket("localhost", 9999);
 
 			paqueteDato online = new paqueteDato();
 
