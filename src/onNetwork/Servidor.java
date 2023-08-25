@@ -1,10 +1,13 @@
 package onNetwork;
 
 import javax.swing.*;
-import java.io.*;
-import java.net.*;
 import java.awt.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 /**
@@ -14,7 +17,7 @@ public class 	Servidor  {
 
 	
 	/** 
-	 * funcion main, crea un objeto de tipo MarcoServido(clase local) y define la accion de cierre
+	 * Funcion main, crea un objeto de tipo MarcoServido(clase local) y define la accion de cierre
 	 * @param args default args
 	 */
 	public static void main(String[] args) {
@@ -30,19 +33,20 @@ public class 	Servidor  {
 /**
 	Clase MarcoServidor, extiende de JFrame
 	Usa runable para ejecutar el metodo run en un thread
-	@see https://docs.oracle.com/javase/8/docs/api/java/lang/Runnable.html
+	@see "https://docs.oracle.com/javase/8/docs/api/java/lang/Runnable.html"
 
 */
 class MarcoServidor extends JFrame implements Runnable {
-	
+
 	/**
-	 * constructor de la clase MarcoServido
-	 * @param null no se reciben argumentos
+	 * Constructor de la clase MarcoServido
+	 *
+	 * @param "null" no se reciben argumentos
 	 */
-	public MarcoServidor(){
-		
-		setBounds(1200,300,280,350);
-			
+	public MarcoServidor() {
+
+		setBounds(1200, 300, 280, 350);
+
 		JPanel plantilla = new JPanel();
 		
 		plantilla.setLayout(new BorderLayout());
@@ -76,7 +80,7 @@ class MarcoServidor extends JFrame implements Runnable {
 
 			String ip, mensaje, usuario;
 
-			ArrayList <String> listaIp = new ArrayList<String>();
+			ArrayList<String> listaIp = new ArrayList<String>();
 
 			paqueteDato paqueteR;
 			
@@ -95,7 +99,7 @@ class MarcoServidor extends JFrame implements Runnable {
 
 				usuario = paqueteR.getUsuario();
 
-				//metodo que recibe una nuvea conexión  y la añade a la lista de disponibles ()
+				//metodo que recibe una nuvea conexión y la añade a la lista de disponibles ()
 
 				if (mensaje.equals("ONLINE")){
 
