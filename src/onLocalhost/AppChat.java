@@ -6,14 +6,51 @@ import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Objects;
+import javax.swing.JOptionPane;
+import javax.swing.JFrame;
 
 public class AppChat {
 
+    
+    /** 
+     * @param args
+     */
     public static void main(String[] args) {
 
         MarcoApp marco=new MarcoApp();
 
-        marco.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        marco.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                Integer serverPort = Chat.getMyPort();
+                InetAddress serverInet = Chat.getMyInet();
+                try {
+                    Socket mysocket = new Socket("localhost", 9999); //envia
+
+                    paqueteDato online = new paqueteDato();
+
+                    online.setPuerto(serverPort);
+                    online.setMensaje("OFFLINE");
+
+
+                    ObjectOutputStream flujo = new ObjectOutputStream(mysocket.getOutputStream());
+
+                    flujo.writeObject(online);
+
+                    mysocket.close();
+                    System.exit(0);
+
+                } catch (UnknownHostException ex) {
+                    throw new RuntimeException(ex);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }catch (Exception e2) {
+                    System.out.println("Error desconocido 2");
+                }
+
+            }
+        });
     }
 
 
@@ -156,7 +193,7 @@ class Chat extends JPanel implements Runnable {
 
                 paqueteR = (paqueteDato) flujoEntrada.readObject();
 
-                if (!paqueteR.getMensaje().equals("ONLINE")){
+                if (!paqueteR.getMensaje().equals("ONLINE") && !paqueteR.getMensaje().equals("OFFLINE")){
 
                     chat.append("\n" + paqueteR.getUsuario() + ": " + paqueteR.getMensaje());
 

@@ -9,6 +9,10 @@ import java.util.ArrayList;
 
 public class Servidor  {
 
+    
+    /** 
+     * @param args
+     */
     public static void main(String[] args) {
         // TODO Auto-generated method stub
 
@@ -75,12 +79,14 @@ class MarcoServidor extends JFrame implements Runnable {
 
                 usuario = paqueteR.getUsuario();
 
-                if (mensaje.equals("ONLINE")){
+                if (mensaje.equals("ONLINE") || mensaje.equals(("OFFLINE"))){
 
-                    //Obtiene ip de los clientes online
 
-                    listaIpnPort.add(portS);
-                    //listaIpnPort.remove(portS);
+                    if (mensaje.equals("ONLINE")){
+                    listaIpnPort.add(portS);}
+                    else{
+                        System.out.println("puerto removido "+portS);
+                        listaIpnPort.remove(portS);}
 
                     paqueteR.setIPs(listaIpnPort);
 
