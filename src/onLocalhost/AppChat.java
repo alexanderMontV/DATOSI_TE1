@@ -1,32 +1,46 @@
 package onLocalhost;
 
 import javax.swing.*;
-import java.awt.event.*;
-import java.io.*;
-import java.net.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Objects;
-import javax.swing.JOptionPane;
-import javax.swing.JFrame;
 
+/**
+ * @author Alexander Montero Vargas, Bryan Sibaja Garro
+ */
 public class AppChat {
 
     
     /** 
-     * @param args
+     * @param args default args
      */
     public static void main(String[] args) {
 
-        MarcoApp marco=new MarcoApp();
+        MarcoApp marco=new MarcoApp(); //crear un objeto de tipo MarcoApp correspondiente a la ventana del cliente
 
 
         marco.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
+            /**
+             * Sistema de detección de cierre de ventana para eliminar el cliente de la lista de clientes disponibles y cerrar la ventana
+             * @see https://stackoverflow.com/questions/9093448/how-to-capture-a-jframes-close-button-click-event
+             * */
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
                 Integer serverPort = Chat.getMyPort();
-                InetAddress serverInet = Chat.getMyInet();
+                InetAddress serverInet = Chat.getMyInet(); //de momento no usado
                 try {
-                    Socket mysocket = new Socket("localhost", 9999); //envia
+                    Socket mysocket = new Socket("localhost", 9999); //envía el paquete online al server para indicar que el cliente está en linea
 
                     paqueteDato online = new paqueteDato();
 
@@ -56,9 +70,14 @@ public class AppChat {
 
 }
 
-
+/**
+ * Clase MarcoApp que muestra el Frame de la pantalla de chat
+ * */
 class MarcoApp extends JFrame{
 
+    /**
+     * Constructor de la clase MarcoApp
+     * */
     public MarcoApp() {
 
         setBounds(600, 300, 280, 350);
@@ -74,14 +93,18 @@ class MarcoApp extends JFrame{
 
 }
 
-//Clase para enviar la ip del usuario online
+/**
+ * Clase para enviar ONLINE al server indicando el estado del cliente y para así registrar el puerto
+ * que se va a usar para recibir mensajes
+ *
+ */
 class online extends WindowAdapter {
     Integer serverPort = Chat.getMyPort();
-    InetAddress serverInet = Chat.getMyInet();
+    InetAddress serverInet = Chat.getMyInet(); //sin uso de momento
     @Override
     public void windowOpened(WindowEvent e) {
         try {
-            Socket mysocket = new Socket("localhost", 9999); //envia
+            Socket mysocket = new Socket("localhost", 9999); //envia el paquete online con el dato "ONLINE" al servidor
 
             paqueteDato online = new paqueteDato();
 
@@ -105,6 +128,11 @@ class online extends WindowAdapter {
     }
 
 }
+
+/**
+ * Área de texto, muestra los mensajes y queda a la espera de recibir nuevos mensajes
+ * en el puerto que
+ * */
 class Chat extends JPanel implements Runnable {
 
     String nombreUsuario = new String();
@@ -176,8 +204,10 @@ class Chat extends JPanel implements Runnable {
     @Override
     public void run() {
         try {
-
-            ServerSocket server = new ServerSocket(0);//puerto del cliente a la espera
+            /**
+             * @see https://docs.oracle.com/javase/8/docs/api/java/net/ServerSocket.html#ServerSocket-int-
+             * */
+            ServerSocket server = new ServerSocket(0);//puerto del cliente a la espera de recibir mensajes, el puerto abre en el que encuentre disponible
             myPort= server.getLocalPort();
             myInet= server.getInetAddress();
 
@@ -193,10 +223,12 @@ class Chat extends JPanel implements Runnable {
 
                 paqueteR = (paqueteDato) flujoEntrada.readObject();
 
+                //verifica si no es un mensaje de estado
                 if (!paqueteR.getMensaje().equals("ONLINE") && !paqueteR.getMensaje().equals("OFFLINE")){
 
                     chat.append("\n" + paqueteR.getUsuario() + ": " + paqueteR.getMensaje());
 
+                //si es un mensaje de estado se actualiza la lista de dirección desplegable
                 }else {
 
                     ArrayList <Integer> ipDesplegable = new ArrayList<Integer>();
@@ -218,12 +250,17 @@ class Chat extends JPanel implements Runnable {
         }
     }
 
+
+    /**
+     * Clase para enviar mensajes de texto al servidor en con un destino en otro cliente
+     * */
     private class enviarTexto implements ActionListener { //ActionListener se usa para detectar y manejar eventos de acción
         @Override
+        //listener del boton
         public void actionPerformed(ActionEvent e) {
             chat.append("\n" + chatApp.getText());
             try {
-                Socket mysocket = new Socket("localhost",9999); //Abre el socket
+                Socket mysocket = new Socket("localhost",9999); //Abre el socket para enviar los datos al servidor
 
                 paqueteDato datos = new paqueteDato(); //Crear un paquete con la información que se va a enviar (Objeto)
 
@@ -248,6 +285,9 @@ class Chat extends JPanel implements Runnable {
     }
 }
 
+/**
+ * PaqueteDato es la clase de todos los paquetes seralizables que se envían entre el servidor y los clientes
+ * */
 class paqueteDato implements Serializable {  //"implements Serializable" es para que todos los obj sea puedan hacer en bit
 
     private String ip, mensaje, usuario;
