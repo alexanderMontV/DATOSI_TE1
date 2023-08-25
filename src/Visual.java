@@ -3,6 +3,10 @@ import java.awt.*;
 
 
 public class Visual {
+    
+    /** 
+     * @param args
+     */
     public static void main(String[] args) {
 
         JFrame frame = new JFrame(); //Frame principal y sus ajustes
