@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"onLocalhost","l":"AppChat"},{"p":"onNetwork","l":"AppChat"},{"p":"onLocalhost","l":"Servidor"},{"p":"onNetwork","l":"Servidor"}];updateSearchResults();
