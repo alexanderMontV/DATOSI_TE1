@@ -17,12 +17,17 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 /**
+ * Cliente de chat para ejecutar en conexion multicomputadora exlusivamente
+ * NOTA: Solo abrir un cliente por computadora para evitar errores de puertos
+ * y editar la dirección del servidor para que apunte a la pc en la que se encuentra
  * @author Alexander Montero Vargas, Bryan Sibaja Garro
- */
+ *
+ * */
 public class AppChat {
 
 
 	/**
+	 *Metodo main clase AppChat, se encarga de crear el MarcoApp y definir el evento de cierre de app
 	 * @param args default args
 	 */
 	public static void main(String[] args) {
@@ -42,7 +47,7 @@ public class AppChat {
 
 					paqueteDato online = new paqueteDato();
 
-					online.setMensaje("OFFLINE");
+					online.setMensaje("OFFLINE"); //mensaje OFFLINE
 
 
 					ObjectOutputStream flujo = new ObjectOutputStream(mysocket.getOutputStream());
@@ -51,6 +56,8 @@ public class AppChat {
 
 					mysocket.close();
 					System.exit(0);
+
+					//NOTA: Se añade System.exit a todas las exepciones para evitar que el app no ser cierre si encuentra un error
 
 				} catch (UnknownHostException ex) {
 					System.exit(0);
@@ -128,8 +135,9 @@ class online extends WindowAdapter {
 }
 
 /**
- * Área de texto, muestra los mensajes y queda a la espera de recibir nuevos mensajes
- * en el puerto que
+ * Area de texto, muestra los mensajes y queda a la espera de recibir nuevos mensajes
+ * en el puerto que abre automaticamente cuando encuentra disponible
+ * @see "https://docs.oracle.com/javase/8/docs/api/java/lang/Runnable.html"
  * */
 class Chat extends JPanel implements Runnable {
 
@@ -137,9 +145,12 @@ class Chat extends JPanel implements Runnable {
 	private static Integer myPort;
 	private static InetAddress myInet;
 
+	/**
+	 * Constructor del componente visual del app de Chat
+	 * */
 	public Chat() {
 
-		nombreUsuario = JOptionPane.showInputDialog("Nombre de usuario: ");
+		nombreUsuario = JOptionPane.showInputDialog("Nombre de usuario: "); //Input que se abre al iniciar el app y que solicita el nombre se usuario
 
 		JLabel usuario = new JLabel("Usuario: ");
 
@@ -187,7 +198,7 @@ class Chat extends JPanel implements Runnable {
 		hilo.start();
 
 	}
-
+	//Atributos visuales
 	private JTextField chatApp;
 
 	private JComboBox ip;
@@ -208,7 +219,7 @@ class Chat extends JPanel implements Runnable {
 
 			paqueteDato paqueteR;
 
-			while (true) {
+			while (true) {  //siempre ejecutandose para esperar un nuevo mensaje
 
 				cliente = server.accept();
 
@@ -216,7 +227,7 @@ class Chat extends JPanel implements Runnable {
 
 				paqueteR = (paqueteDato) flujoEntrada.readObject();
 
-				//verifica si no es un mensaje de estado
+				//verifica si no es un mensaje de estado, entonces añade el mensaje recibido al area de chat
 				if (!paqueteR.getMensaje().equals("ONLINE") && !paqueteR.getMensaje().equals("OFFLINE")){
 
 					chat.append("\n" + paqueteR.getUsuario() + ": " + paqueteR.getMensaje());
@@ -245,11 +256,15 @@ class Chat extends JPanel implements Runnable {
 
 
 	/**
-	 * Clase para enviar mensajes de texto al servidor en con un destino en otro cliente
+	 * Clase para enviar mensajes de texto al servidor en con un destino en otro cliente en otra diracción ip (varia ip)
 	 * */
 	private class enviarTexto implements ActionListener { //ActionListener se usa para detectar y manejar eventos de acción
 		@Override
-		//listener del boton
+		/**
+		 * Listener de los eventos del botón enviar, obtiene el valor que se ingreso en el area de texto
+		 * y arma un paquede de datos para enviarlo al servidor con los datos del nombre de usuario, mensaje y
+		 * puerto de destino del cliente al que se le desdea enviar
+		 * */
 		public void actionPerformed(ActionEvent e) {
 			chat.append("\n" + chatApp.getText());
 			try {
@@ -280,6 +295,7 @@ class Chat extends JPanel implements Runnable {
 
 /**
  * PaqueteDato es la clase de todos los paquetes seralizables que se envían entre el servidor y los clientes
+ * @see "https://docs.oracle.com/javase%2F7%2Fdocs%2Fapi%2F%2F/java/io/Serializable.html"
  * */
 class paqueteDato implements Serializable {  //"implements Serializable" es para que todos los obj sea puedan hacer en bit
 

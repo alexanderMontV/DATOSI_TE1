@@ -8,11 +8,15 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+/**
+ * Clase Servidor, clase principal del archivo, ejecuta el main que da arranque al server
+ */
 public class Servidor  {
 
     
-    /** 
-     * @param args
+    /**
+     * Genera el MarcoApp y configura la opcion de cierre de app
+     * @param args defualt args
      */
     public static void main(String[] args) {
         // TODO Auto-generated method stub
@@ -23,9 +27,15 @@ public class Servidor  {
 
     }
 }
-
+/**
+ * Clase MarcoApp que muestra el Frame de la pantalla de chat, además
+ * se añaden los elementos visuales, el cuadro de texto que muestra los mensajes recibidos por el server
+ * @see "https://docs.oracle.com/javase/8/docs/api/java/lang/Runnable.html
+ * */
 class MarcoServidor extends JFrame implements Runnable {
-
+    /**
+     * Constructor de la clase MarcoApp
+     * */
     public MarcoServidor(){
 
         setBounds(600,300,280,350);
@@ -51,7 +61,7 @@ class MarcoServidor extends JFrame implements Runnable {
     public void run() {
 
         try {
-            ServerSocket server = new ServerSocket(9999); //Socket de entrada
+            ServerSocket server = new ServerSocket(9999); //Socket de entrada que recibe los mensajes
 
             String ip, mensaje, usuario;
             Integer portS;
@@ -61,7 +71,7 @@ class MarcoServidor extends JFrame implements Runnable {
 
             paqueteDato paqueteR;
 
-            while (true) {
+            while (true) {//queda a la espera de un nuevo mensaje
 
                 Socket mysocket = server.accept();
 
@@ -77,6 +87,8 @@ class MarcoServidor extends JFrame implements Runnable {
 
                 usuario = paqueteR.getUsuario();
 
+                //Verifica si es un mensaje de estado, si es así envía un mensaje para actualizar la listas de clientes
+
                 if (mensaje.equals("ONLINE") || mensaje.equals(("OFFLINE"))){
 
 
@@ -88,7 +100,7 @@ class MarcoServidor extends JFrame implements Runnable {
 
                     paqueteR.setIPs(listaIpnPort);
 
-                    for (Integer z: listaIpnPort){
+                    for (Integer z: listaIpnPort){ //envía el mesaje a todos lo clientes en linea
 
                         System.out.println("Array: " + z);
 
@@ -104,7 +116,7 @@ class MarcoServidor extends JFrame implements Runnable {
 
                         mysocket.close();
                     }
-
+                    //envía un mensje normal al cliente de destino
                 }else{
 
                     areaTexto.append("\nIP: localhost:" +portS + "\nUsuario: " + usuario + "\nMensaje: " + mensaje);

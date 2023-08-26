@@ -17,12 +17,15 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 /**
+ * Cliente de chat para ejecutar en localhost exlusivamente
  * @author Alexander Montero Vargas, Bryan Sibaja Garro
- */
+ *
+ * */
 public class AppChat {
 
     
-    /** 
+    /**
+     *Metodo main clase AppChat, se encarga de crear el MarcoApp y definir el evento de cierre de app
      * @param args default args
      */
     public static void main(String[] args) {
@@ -38,14 +41,13 @@ public class AppChat {
              * */
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
                 Integer serverPort = Chat.getMyPort();
-                InetAddress serverInet = Chat.getMyInet(); //de momento no usado
                 try {
-                    Socket mysocket = new Socket("localhost", 9999); //envía el paquete online al server para indicar que el cliente está en linea
+                    Socket mysocket = new Socket("localhost", 9999); //envía el paquete offline al server para indicar que el cliente está en se desconectó
 
                     paqueteDato online = new paqueteDato();
 
                     online.setPuerto(serverPort);
-                    online.setMensaje("OFFLINE");
+                    online.setMensaje("OFFLINE"); //mensaje OFFLINE
 
 
                     ObjectOutputStream flujo = new ObjectOutputStream(mysocket.getOutputStream());
@@ -55,6 +57,7 @@ public class AppChat {
                     mysocket.close();
                     System.exit(0);
 
+                    //NOTA: Se añade System.exit a todas las exepciones para evitar que el app no ser cierre si encuentra un error
                 } catch (UnknownHostException ex) {
                     System.exit(0);
                     throw new RuntimeException(ex);
@@ -103,7 +106,6 @@ class MarcoApp extends JFrame{
  */
 class online extends WindowAdapter {
     Integer serverPort = Chat.getMyPort();
-    InetAddress serverInet = Chat.getMyInet(); //sin uso de momento
     @Override
     public void windowOpened(WindowEvent e) {
         try {
@@ -133,8 +135,9 @@ class online extends WindowAdapter {
 }
 
 /**
- * Área de texto, muestra los mensajes y queda a la espera de recibir nuevos mensajes
- * en el puerto que
+ * Area de texto, muestra los mensajes y queda a la espera de recibir nuevos mensajes
+ * en el puerto que abre automaticamente cuando encuentra disponible
+ * @see "https://docs.oracle.com/javase/8/docs/api/java/lang/Runnable.html"
  * */
 class Chat extends JPanel implements Runnable {
 
@@ -142,9 +145,12 @@ class Chat extends JPanel implements Runnable {
     private static Integer myPort;
     private static InetAddress myInet;
 
+    /**
+     * Constructor del componente visual del app de Chat
+     * */
     public Chat() {
 
-        nombreUsuario = JOptionPane.showInputDialog("Nombre de usuario: ");
+        nombreUsuario = JOptionPane.showInputDialog("Nombre de usuario: "); //Input que se abre al iniciar el app y que solicita el nombre se usuario
 
         JLabel usuario = new JLabel("Usuario: ");
 
@@ -193,7 +199,7 @@ class Chat extends JPanel implements Runnable {
         hilo.start();
 
     }
-
+    //Atributos visuales
     private JTextField chatApp;
 
     private JComboBox ip;
@@ -210,6 +216,7 @@ class Chat extends JPanel implements Runnable {
         return myInet;
     }
 
+    /**Metodo run*/
     @Override
     public void run() {
         try {
@@ -217,14 +224,13 @@ class Chat extends JPanel implements Runnable {
              * @see https://docs.oracle.com/javase/8/docs/api/java/net/ServerSocket.html#ServerSocket-int-
              * */
             ServerSocket server = new ServerSocket(0);//puerto del cliente a la espera de recibir mensajes, el puerto abre en el que encuentre disponible
-            myPort= server.getLocalPort();
-            myInet= server.getInetAddress();
+            myPort= server.getLocalPort();//obtiene el valor del puerto que abre automáticamente para poder emplearlo en el servidor
 
             Socket cliente;
 
             paqueteDato paqueteR;
 
-            while (true) {
+            while (true) { //siempre ejecutandose para esperar un nuevo mensaje
 
                 cliente = server.accept();
 
@@ -232,7 +238,7 @@ class Chat extends JPanel implements Runnable {
 
                 paqueteR = (paqueteDato) flujoEntrada.readObject();
 
-                //verifica si no es un mensaje de estado
+                //verifica si no es un mensaje de estado, entonces añade el mensaje recibido al area de chat
                 if (!paqueteR.getMensaje().equals("ONLINE") && !paqueteR.getMensaje().equals("OFFLINE")){
 
                     chat.append("\n" + paqueteR.getUsuario() + ": " + paqueteR.getMensaje());
@@ -261,11 +267,15 @@ class Chat extends JPanel implements Runnable {
 
 
     /**
-     * Clase para enviar mensajes de texto al servidor en con un destino en otro cliente
+     * Clase para enviar mensajes de texto al servidor en con un destino en otro cliente en el localhost (varía puerto)
      * */
     private class enviarTexto implements ActionListener { //ActionListener se usa para detectar y manejar eventos de acción
         @Override
-        //listener del boton
+        /**
+         * Listener de los eventos del botón enviar, obtiene el valor que se ingres en el area de texto
+         * y arma un paquede de datos para enviarlo al servidor con los datos del nombre de usuario, mensaje y
+         * puerto de destino del cliente al que se le desdea enviar
+         * */
         public void actionPerformed(ActionEvent e) {
             chat.append("\n" + chatApp.getText());
             try {
@@ -296,6 +306,7 @@ class Chat extends JPanel implements Runnable {
 
 /**
  * PaqueteDato es la clase de todos los paquetes seralizables que se envían entre el servidor y los clientes
+ * @see "https://docs.oracle.com/javase%2F7%2Fdocs%2Fapi%2F%2F/java/io/Serializable.html"
  * */
 class paqueteDato implements Serializable {  //"implements Serializable" es para que todos los obj sea puedan hacer en bit
 
