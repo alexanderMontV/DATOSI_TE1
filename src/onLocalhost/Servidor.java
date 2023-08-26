@@ -1,10 +1,11 @@
 package onLocalhost;
 
 import javax.swing.*;
-import java.io.*;
-import java.net.*;
-import java.awt.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 
 public class Servidor  {
@@ -17,7 +18,7 @@ public class Servidor  {
         // TODO Auto-generated method stub
 
         MarcoServidor marco = new MarcoServidor();
-
+        marco.setTitle("Servidor LocalHost");
         marco.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     }
@@ -27,17 +28,14 @@ class MarcoServidor extends JFrame implements Runnable {
 
     public MarcoServidor(){
 
-        setBounds(1200,300,280,350);
+        setBounds(600,300,280,350);
 
-        JPanel plantilla = new JPanel();
+        areaTexto = new JTextArea ();
+        areaTexto.setEditable(false);
 
-        plantilla.setLayout(new BorderLayout());
+        JScrollPane scroll = new JScrollPane (areaTexto);
 
-        areaTexto = new JTextArea();
-
-        plantilla.add(areaTexto,BorderLayout.CENTER);
-
-        add(areaTexto);
+        add(scroll);
 
         setVisible(true);
 

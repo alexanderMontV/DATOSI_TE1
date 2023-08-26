@@ -1,7 +1,6 @@
 package onNetwork;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -20,6 +19,7 @@ public class Servidor  {
 		// TODO Auto-generated method stub
 
 		MarcoServidor marco = new MarcoServidor();
+		marco.setTitle("Servidor onNetwork");
 
 		marco.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -30,17 +30,14 @@ class MarcoServidor extends JFrame implements Runnable {
 
 	public MarcoServidor(){
 
-		setBounds(1200,300,280,350);
+		setBounds(600,300,280,350);
 
-		JPanel plantilla = new JPanel();
+		areaTexto = new JTextArea ();
 
-		plantilla.setLayout(new BorderLayout());
+		JScrollPane scroll = new JScrollPane (areaTexto);
 
-		areaTexto = new JTextArea();
+		add(scroll);
 
-		plantilla.add(areaTexto,BorderLayout.CENTER);
-
-		add(areaTexto);
 
 		setVisible(true);
 

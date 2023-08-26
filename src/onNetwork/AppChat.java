@@ -29,7 +29,7 @@ public class AppChat {
 
 		MarcoApp marco=new MarcoApp(); //crear un objeto de tipo MarcoApp correspondiente a la ventana del cliente
 
-
+		marco.setTitle("Cliente Online");
 		marco.addWindowListener(new java.awt.event.WindowAdapter() {
 			@Override
 			/**
@@ -53,10 +53,13 @@ public class AppChat {
 					System.exit(0);
 
 				} catch (UnknownHostException ex) {
+					System.exit(0);
 					throw new RuntimeException(ex);
 				} catch (IOException ex) {
+					System.exit(0);
 					throw new RuntimeException(ex);
 				}catch (Exception e2) {
+					System.exit(0);
 					System.out.println("Error desconocido 2");
 				}
 
@@ -156,9 +159,14 @@ class Chat extends JPanel implements Runnable {
 
 		add(ip);
 
-		chat = new JTextArea(12, 20);
+		chat = new JTextArea (12,20);
 
-		add(chat);
+		JScrollPane scroll = new JScrollPane (chat);
+
+		add(scroll);
+
+
+		setVisible(true);
 
 		chatApp = new JTextField(20);
 
